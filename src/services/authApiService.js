@@ -1,103 +1,69 @@
-import axios from "axios";
-import { useAuthStore } from '../stores/auth.js';
-
-const API_URL = import.meta.env.VITE_PAYSHARE_API_URL;
-const API_KEY = import.meta.env.VITE_PAYSHARE_API_KEY;
-const BASE_URL = API_URL.endsWith('/') ? `${API_URL}api/v1` : `${API_URL}/api/v1`;
+import apiClient from './baseApiService.js'
+import { useAuthStore } from '../stores/auth.js'
 
 export const register = async (username, email, password) => {
-    try {
-        const form = {
-            'username': username,
-            'email': email,
-            'password': password
-        }
-
-        const authStore = useAuthStore()
-
-        const response = await axios.post(
-            `${BASE_URL}/auth/register`,
-            form,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                }
-            }
-        );
-
-        const token = response.data.access_token;
-
-        localStorage.setItem('authToken', token);
-        authStore.setAuth(token, response.data.user)
-
-        return { success: true, message: "Authenticated" };
-
-    } catch (error) {
-        if(error.response && (error.response.status == 422 || error.response.status == 401)){
-            const errorMessage = 'Invalid email or password.'
-            return { success: false, message: errorMessage };
-        } else {
-            const errorMessage = 'Login failed: ' + error.message;
-            return { success: false, message: errorMessage };
-        }
+  try {
+    const form = {
+      username,
+      email,
+      password
     }
+
+    const authStore = useAuthStore()
+    const response = await apiClient.post('/auth/register', form)
+
+    const token = response.data.access_token
+    localStorage.setItem('authToken', token)
+    authStore.setAuth(token, response.data.user)
+
+    return { success: true, message: "Authenticated" }
+  } catch (error) {
+    if (error.response && (error.response.status === 422 || error.response.status === 401)) {
+      return { success: false, message: 'Invalid email or password.' }
+    } else {
+      return { success: false, message: 'Registration failed: ' + error.message }
+    }
+  }
 }
 
 export const login = async (email, password) => {
-    try {
-        const form = {
-            'email': email,
-            'password': password
-        }
-
-        const authStore = useAuthStore()
-
-        const response = await axios.post(
-            `${BASE_URL}/auth/login`,
-            form,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                }
-            }
-        );
-
-        const token = response.data.access_token;
-        const user = response.data.user;
-        localStorage.setItem('authToken', token);
-        authStore.setAuth(token, user);
-        
-        return { success: true, message: "Authenticated" };
-
-    } catch (error) {
-        if(error.response && (error.response.status == 422 || error.response.status == 401)){
-            const errorMessage = 'Invalid email or password.'
-            return { success: false, message: errorMessage };
-        } else {
-            const errorMessage = 'Login failed: ' + error.message;
-            return { success: false, message: errorMessage };
-        }
+  try {
+    const form = {
+      email,
+      password
     }
+
+    const authStore = useAuthStore()
+
+    const response = await apiClient.post('/auth/login', form)
+
+    const token = response.data.access_token
+    const user = response.data.user
+    localStorage.setItem('authToken', token)
+    authStore.setAuth(token, user)
+
+    return { success: true, message: "Authenticated" }
+  } catch (error) {
+    if (error.response && (error.response.status === 422 || error.response.status === 401)) {
+      return { success: false, message: 'Invalid email or password.' }
+    } else {
+      return { success: false, message: 'Login failed: ' + error.message }
+    }
+  }
 }
 
 export const checkAuth = async () => {
-    try {
-        const authStore = useAuthStore();
+  try {
+    const authStore = useAuthStore()
 
-        const response = await axios.get(
-            `${BASE_URL}/auth/check`,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${authStore.token}`
-                }
-            }
-        );
+    const response = await apiClient.get('/auth/check', {
+      headers: {
+        'Authorization': `Bearer ${authStore.token}`
+      }
+    })
 
-        return { success: true, message: response.data.message, user: response.data.user };
-
-    } catch (error) {
-        const errorMessage = 'Error while doing auth check: ' + error.message;
-        return { success: false, message: errorMessage };
-    }
+    return { success: true, message: response.data.message, user: response.data.user }
+  } catch (error) {
+    return { success: false, message: 'Error while doing auth check: ' + error.message }
+  }
 }

@@ -13,6 +13,8 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 onMounted(() => {
+  document.getElementById('email').focus();
+
   if(authStore.isAuthenticated){
     router.push('/dashboard')
   }
@@ -36,6 +38,11 @@ const handleLogin = async () => {
   }
 }
 
+const handleKeydown = (event) => {
+  if (event.key === 'Enter') {
+    handleLogin();
+  }
+};
 </script>
 
 <template>
@@ -44,8 +51,8 @@ const handleLogin = async () => {
       <form class="bg-white p-8 w-full max-w-md flex flex-col space-y-4">
         <h2 class="text-2xl font-bold text-center">Login to Your Account</h2>
 
-        <input v-model="email" type="email" placeholder="Email" class="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <input v-model="password" type="password" placeholder="Password" class="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input v-model="email" id="email" type="email" @keydown="handleKeydown" placeholder="Email" class="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input v-model="password" id="password" type="password" @keydown="handleKeydown" placeholder="Password" class="border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
         <div v-if="errorMessage" class="text-center text-red-600">{{ errorMessage }}</div>
 

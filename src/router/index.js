@@ -9,6 +9,7 @@ import DashboardView from '../views/dashboard/DashboardView.vue';
 import SettingsView from '../views/dashboard/SettingsView.vue';
 
 import NotFoundView from '../views/error/NotFoundView.vue'
+import GroupView from '@/views/groups/GroupView.vue';
 
 const routes = [
     // public
@@ -21,6 +22,9 @@ const routes = [
     // dashboard
     { path: '/dashboard', name: 'Dashboard', component: DashboardView, meta: { requiresAuth: true} },
     { path: '/settings', name: 'Settings', component: SettingsView, meta: { requiresAuth: true} },
+
+    // groups
+    { path: '/groups/:id', name: 'GroupsView', component: GroupView, meta: { requiresAuth: true} },
 
     // profile
 
