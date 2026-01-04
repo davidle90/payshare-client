@@ -19,3 +19,53 @@ export const getGroup = async (referenceId) => {
     throw error;
   }
 }
+
+export const createGroup = async (data) => {
+  try {
+    const response = await apiClient.post('/expense-groups/', data);
+    return response.data.data;
+  } catch (error) {
+    console.log('Failed to create group:', error);
+    throw error;
+  }
+}
+
+export const updateGroup = async (referenceId, data) => {
+  try {
+    const response = await apiClient.put('/expense-groups/'+referenceId, data);
+    return response.data.data;
+  } catch (error) {
+    console.log('Failed to update group:', error);
+    throw error;
+  }
+}
+
+export const deleteGroup = async (referenceId) => {
+  try {
+    const response = await apiClient.delete('/expense-groups/'+referenceId);
+    return response.data.data;
+  } catch (error) {
+    console.log('Failed to delete group:', error);
+    throw error;
+  }
+}
+
+export const joinGroup = async (referenceId, userId) => {
+  try {
+    const response = await apiClient.post('/expense-groups/'+referenceId+'/members', userId);
+    return response.data.data;
+  } catch (error) {
+    console.log('Failed to join group:', error);
+    throw error;
+  }
+}
+
+export const leaveGroup = async (referenceId, memberId) => {
+  try {
+    const response = await apiClient.delete('/expense-groups/'+referenceId+'/members/'+memberId);
+    return response.data.data;
+  } catch (error) {
+    console.log('Failed to leave group:', error);
+    throw error;
+  }
+}

@@ -1,20 +1,55 @@
 <script setup>
-import BaseLayout from '../../layouts/BaseLayout.vue';
+import { computed, ref } from 'vue'
+import BaseLayout from '../../layouts/BaseLayout.vue'
+import { useAuthStore } from '../../stores/auth.js'
+import FrequentlyAskedQuestions from '@/components/FrequentlyAskedQuestions.vue'
+
+const authStore = useAuthStore()
+const isAuthenticated = ref(authStore.isAuthenticated)
+const routeTo = computed(() => {
+  return isAuthenticated.value ? '/dashboard' : '/login'
+})
 </script>
 
 <template>
   <BaseLayout>
-    <div class="flex flex-col items-center justify-center text-center space-y-6 mt-20">
-      <h1 class="text-5xl font-bold">Welcome to PAYSHARE App</h1>
-      <p class="text-gray-600 text-lg max-w-xl">
-        This is a simple landing page built with Vue 3 and Tailwind CSS.
+    <section class="flex flex-col items-center text-center px-4 pt-28 pb-20">
+      <!-- Hero -->
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 max-w-3xl leading-tight mb-6">
+        Split expenses.<br class="hidden sm:block" />
+        Stay fair. No awkward reminders.
+      </h1>
+
+      <p class="text-lg text-gray-600 max-w-2xl mb-10">
+        PAYSHARE simplifies expense sharing for friends, roommates, or group trips.
+        Track balances and settle up with clarity.
       </p>
-      <router-link 
-        to="/login" 
-        class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
+
+      <!-- CTA -->
+      <router-link
+        :to="routeTo"
+        class="bg-gray-900 text-white px-8 py-3 rounded-lg text-base font-medium hover:bg-gray-800 transition"
       >
-        Get Started
+        Get started
       </router-link>
-    </div>
+
+      <!-- Feature hints -->
+      <div class="my-14 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl text-sm text-gray-600">
+        <div class="flex flex-col items-center">
+          <span class="mb-2 text-lg">💸</span>
+          <p>Track shared expenses</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="mb-2 text-lg">🤝</span>
+          <p>See who owes who</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="mb-2 text-lg">✅</span>
+          <p>Settle up with clarity</p>
+        </div>
+      </div>
+
+      <FrequentlyAskedQuestions />
+    </section>
   </BaseLayout>
 </template>
