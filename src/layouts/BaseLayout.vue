@@ -20,7 +20,7 @@
     <!-- Footer -->
     <footer class="bg-white shadow p-4 text-center text-sm text-gray-500">
       <!-- If no footer slot is provided, display the default footer text -->
-      <slot name="footer">© 2025 PAYSHARE</slot>
+      <slot name="footer">© 2026 PAYSHARE</slot>
     </footer>
   </div>
 </template>
