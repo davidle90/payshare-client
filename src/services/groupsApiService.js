@@ -2,7 +2,7 @@ import apiClient from './baseApiService.js';
 
 export const listGroups = async () => {
   try {
-    const response = await apiClient.get('/expense-groups');
+    const response = await apiClient.get('/expense-groups?includes=members,debts,expenses');
     return response.data.data;
   } catch (error) {
     console.log('Failed to fetch groups:', error);
@@ -12,7 +12,7 @@ export const listGroups = async () => {
 
 export const getGroup = async (referenceId) => {
   try {
-    const response = await apiClient.get('/expense-groups/'+referenceId+'?includes=members,expenses');
+    const response = await apiClient.get('/expense-groups/'+referenceId+'?includes=members,expenses,debts');
     return response.data.data;
   } catch (error) {
     console.log('Failed to fetch group:', error);
