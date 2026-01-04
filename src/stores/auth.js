@@ -28,4 +28,8 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('authToken')
     }
   },
+
+  getters: {
+    userId: (state) => state.user?.id || null
+  }
 });

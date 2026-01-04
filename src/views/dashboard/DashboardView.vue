@@ -1,14 +1,14 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import BaseLayout from '../../layouts/BaseLayout.vue';
-import { listGroups } from '../../services/groupsApiService';
+import { getGroups } from '../../services/groupsApiService';
 import GroupsList from '@/components/GroupsList.vue';
-import DebtsList from '@/components/DebtsList.vue';
+import UserDebtsList from '@/components/UserDebtsList.vue';
 
 const groups = ref([]);
 
 onMounted(async () => {
-  groups.value = await listGroups();
+  groups.value = await getGroups();
 });
 
 const createGroup = () => {
@@ -26,7 +26,7 @@ const joinGroup = () => {
     <div class="flex flex-col gap-4">
       <div>
         <div class="text-sm font-bold">Debts</div>
-        <DebtsList :groups />
+        <UserDebtsList />
       </div>
       
       <div>
