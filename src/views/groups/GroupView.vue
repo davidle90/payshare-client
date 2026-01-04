@@ -1,7 +1,8 @@
 <script setup>
+import GroupDebtList from '@/components/GroupDebtList.vue';
 import BaseLayout from '@/layouts/BaseLayout.vue';
 import { getGroup } from '@/services/groupsApiService';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -10,12 +11,18 @@ const referenceId = route.params.id;
 const group = ref(null);
 const members = ref([]);
 const expenses = ref([]);
+const hasUnsettled = computed(() => expenses.value.some(e => !e.isSettled))
+const showActionsDropdown = ref(false)
 
 onMounted(async () => {
   group.value = await getGroup(referenceId);
   members.value = group.value.members;
   expenses.value = group.value.expenses;
 });
+
+const handleSettleUp = () => {
+  console.log('Settle up')
+}
 
 const showExpenseData = () => {
     console.log('Show expense data')
@@ -25,26 +32,55 @@ const createExpense = () => {
     console.log('Create expense')
 }
 
-const editGroup = () => {
-  console.log('Edit group');
-};
+const toggleActionsDropdown = () => {
+  showActionsDropdown.value = !showActionsDropdown.value
+}
 
-const leaveGroup = () => {
-  console.log('Leave group');
-};
+function editGroup() {
+  console.log('Edit group clicked')
+  showActionsDropdown.value = false
+}
+
+function leaveGroup() {
+  console.log('Leave group clicked')
+  showActionsDropdown.value = false
+}
 </script>
 
 <template>
   <BaseLayout>
     <div class="flex justify-between items-center mb-6">
       <router-link to="/dashboard" class="underline text-gray-700 hover:text-gray-900">Back</router-link>
-      <div class="flex gap-2">
-        <button @click="editGroup" class="px-3 py-1 rounded bg-black text-sm text-white hover:bg-gray-800 transition-colors cursor-pointer">
+      <div class="relative">
+        <!-- Dropdown trigger -->
+        <button 
+          @click="toggleActionsDropdown" 
+          class="px-3 py-1 rounded bg-gray-800 text-sm text-white hover:bg-gray-700 transition-colors cursor-pointer flex items-center gap-1"
+        >
+          Actions
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <!-- Dropdown menu -->
+        <div 
+          v-if="showActionsDropdown" 
+          class="absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded shadow-md z-10"
+        >
+          <button 
+            @click="editGroup" 
+            class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
+          >
             Edit group
-        </button>
-        <button @click="leaveGroup" class="px-3 py-1 rounded bg-black text-sm text-white hover:bg-gray-800 transition-colors cursor-pointer">
+          </button>
+          <button 
+            @click="leaveGroup" 
+            class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition"
+          >
             Leave group
-        </button>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -55,7 +91,7 @@ const leaveGroup = () => {
       </div>
 
       <!-- Members -->
-      <section class="mb-6">
+      <section class="mb-4">
         <h2 class="text-lg font-semibold mb-2">Members</h2>
         <div class="flex flex-wrap gap-2">
           <span
@@ -68,34 +104,34 @@ const leaveGroup = () => {
         </div>
       </section>
 
-    <!-- Debts -->
-    <section>
-        <h2 class="text-lg font-semibold mb-2">Debts</h2>
-        <p>//</p>
-    </section>
+      <!-- Debts -->
+      <section>
+        <div class="mb-4">
+          <h2 class="text-lg font-semibold">Debts</h2>
+          <GroupDebtList :groupId="group.referenceId"/>
+        </div>
+      </section>
 
       <!-- Expenses -->
       <section>
-        <div class="flex justify-between mb-2">
-            <h2 class="text-lg font-semibold">Expenses</h2>
-            <button @click="createExpense" class="px-3 py-1 rounded bg-black text-sm text-white hover:bg-gray-800 transition-colors cursor-pointer">
-                Create expense
-            </button>
+        <div class="flex justify-between mb-4">
+          <h2 class="text-lg font-semibold">Expenses</h2>
+          <button @click="createExpense" class="px-3 py-1 rounded bg-gray-800 text-sm text-white hover:bg-gray-700 transition-colors cursor-pointer">
+            Create expense
+          </button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             v-for="expense in expenses"
             :key="expense.id"
             @click="showExpenseData"
-            class="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-white cursor-pointer"
+            class="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition"
           >
             <h3 class="font-medium text-gray-800">{{ expense.name }}</h3>
             <p class="text-sm text-gray-500 mb-2">{{ expense.description }}</p>
+            <p class="text-sm text-gray-700"><strong>Total: </strong>{{ expense.totalAmount }}</p>
             <p class="text-sm text-gray-700">
-              <strong>Total: </strong>{{ expense.totalAmount }}
-            </p>
-            <p class="text-sm text-gray-700">
-              <strong>Status: </strong>
+              <strong>Settlement: </strong>
               <span :class="expense.isSettled ? 'text-green-600' : 'text-blue-600'">
                 {{ expense.isSettled ? 'Settled' : 'Pending' }}
               </span>
@@ -108,6 +144,27 @@ const leaveGroup = () => {
 
     <div v-else>
       <p class="text-gray-500">Loading group data...</p>
+    </div>
+
+    <div class="mt-12">
+      <div class="fixed bottom-16 left-0 w-full flex justify-center px-4 z-50">
+        <div 
+          v-if="hasUnsettled"
+          class="px-4 py-2 rounded border border-gray-300 bg-white text-gray-800 flex items-center gap-2"
+        >
+          <span>You have unsettled expenses</span>
+          <button @click="handleSettleUp" class="px-2 py-1 text-sm rounded border border-gray-300 hover:bg-gray-100 transition cursor-pointer">
+            Settle up
+          </button>
+        </div>
+
+        <div 
+          v-else
+          class="px-4 py-2 rounded border border-gray-300 bg-white text-gray-600"
+        >
+          Nothing to settle
+        </div>
+      </div>
     </div>
   </BaseLayout>
 </template>

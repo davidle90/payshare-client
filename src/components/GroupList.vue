@@ -11,6 +11,11 @@ const goToGroup = async (referenceId) => {
     if(!referenceId) return
     router.push('/groups/'+referenceId)
 }
+
+const hasUnsettled = (expenses) => {
+    if(!expenses) return false;
+    return expenses.some(e => !e.isSettled);
+}
 </script>
 
 <template>
@@ -23,13 +28,10 @@ const goToGroup = async (referenceId) => {
                         Name
                     </th>
                     <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Reference ID
-                    </th>
-                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">
                         Total Expense
                     </th>
                     <th class="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Members
+                        Settlements
                     </th>
                 </tr>
             </thead>
@@ -44,13 +46,10 @@ const goToGroup = async (referenceId) => {
                         {{ group.name }}
                     </td>
                     <td class="px-4 py-3 text-sm text-gray-900">
-                        {{ group.referenceId }}
-                    </td>
-                    <td class="px-4 py-3 text-sm text-gray-900">
                         {{ group.totalExpenses }} {{ group.currency }}
                     </td>
-                    <td class="px-4 py-3 text-sm 900-gray-500">
-                        {{ group.members?.length }}
+                    <td class="px-4 py-3 text-sm text-gray-900">
+                        {{ hasUnsettled(group.expenses) ? 'Pending' : 'Settled' }}
                     </td>
                 </tr>
             </tbody>

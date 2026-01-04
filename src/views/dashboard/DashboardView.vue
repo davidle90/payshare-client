@@ -2,8 +2,8 @@
 import { onMounted, ref } from 'vue';
 import BaseLayout from '../../layouts/BaseLayout.vue';
 import { getGroups } from '../../services/groupsApiService';
-import GroupsList from '@/components/GroupsList.vue';
-import UserDebtsList from '@/components/UserDebtsList.vue';
+import GroupList from '@/components/GroupList.vue';
+import UserDebtList from '@/components/UserDebtList.vue';
 
 const groups = ref([]);
 
@@ -25,12 +25,12 @@ const joinGroup = () => {
   <BaseLayout>
     <div class="flex flex-col gap-4">
       <div>
-        <div class="text-sm font-bold">Debts</div>
-        <UserDebtsList />
+        <div class="text-sm font-bold mb-2">Debts</div>
+        <UserDebtList />
       </div>
       
       <div>
-        <div class="flex justify-between">
+        <div class="flex justify-between mb-2">
           <div class="text-sm font-bold">Groups</div>
           <div class="flex gap-2">
             <button @click="joinGroup" class="px-3 py-1 cursor-pointer rounded bg-black text-sm text-white">Join group</button>
@@ -39,6 +39,6 @@ const joinGroup = () => {
         </div>
       </div>
     </div>
-    <GroupsList :groups />
+    <GroupList :groups />
   </BaseLayout>
 </template>
