@@ -1,8 +1,10 @@
 <script setup>
+import CreateExpenseModal from '@/components/CreateExpenseModal.vue';
 import EditGroupModal from '@/components/EditGroupModal.vue';
 import GroupDebtList from '@/components/GroupDebtList.vue';
 import LeaveGroupModal from '@/components/LeaveGroupModal.vue';
 import ManageMembersModal from '@/components/ManageMembersModal.vue';
+import SettleUpModal from '@/components/SettleUpModal.vue';
 import BaseLayout from '@/layouts/BaseLayout.vue';
 
 import { getGroup } from '@/services/groupsApiService';
@@ -26,6 +28,9 @@ const showMembersModal = ref(false)
 const showEditGroupModal = ref(false)
 const showLeaveGroupModal = ref(false)
 
+const showCreateExpenseModal = ref(false)
+const showSettleUpModal = ref(false)
+
 onMounted(async () => {
   group.value = await getGroup(referenceId);
   members.value = group.value.members;
@@ -33,6 +38,8 @@ onMounted(async () => {
 
   groupName.value = group.value.name;
 });
+
+// Toggle modals
 
 const toggleActionsDropdown = () => {
   showActionsDropdown.value = !showActionsDropdown.value
@@ -43,19 +50,33 @@ const toggleMembersModal = () => {
   showMembersModal.value = !showMembersModal.value
 }
 
+const toggleSettleUpModal = () => {
+  showActionsDropdown.value = false;
+  showSettleUpModal.value = !showSettleUpModal.value
+}
+
+const toggleCreateExpenseModal = () => {
+  showActionsDropdown.value = false;
+  showCreateExpenseModal.value = !showCreateExpenseModal.value
+}
+
+// Settle up
+
 const handleSettleUp = () => {
   showActionsDropdown.value = false;
   console.log('Settle up')
 }
 
-const showExpenseData = () => {
+// Expense
+
+const showExpenseData = (expenseId) => {
     showActionsDropdown.value = false;
-    console.log('Show expense data')
+    console.log('Show expense data: ' + expenseId)
 }
 
-const createExpense = () => {
+const handleExpenseCreated = (expense) => {
     showActionsDropdown.value = false;
-    console.log('Create expense')
+    expenses.value.unshift(expense);
 }
 
 //Update group
@@ -171,7 +192,7 @@ const handleUpdateMembers = (removedMemberIds) => {
       <section>
         <div class="flex justify-between mb-4">
           <h2 class="text-lg font-semibold">Expenses</h2>
-          <button @click="createExpense" class="px-3 py-1 rounded bg-gray-800 text-sm text-white hover:bg-gray-700 transition-colors cursor-pointer">
+          <button @click="toggleCreateExpenseModal" class="px-3 py-1 rounded bg-gray-800 text-sm text-white hover:bg-gray-700 transition-colors cursor-pointer">
             Create expense
           </button>
         </div>
@@ -205,10 +226,10 @@ const handleUpdateMembers = (removedMemberIds) => {
       <div class="fixed bottom-16 left-0 w-full flex justify-center px-4 z-50">
         <div 
           v-if="hasUnsettled"
-          class="px-4 py-2 rounded border border-gray-300 bg-white text-gray-800 flex items-center gap-2"
+          class="px-4 py-2 bg-yellow-100 rounded border border-gray-300 bg-white text-gray-800 flex items-center gap-2"
         >
           <span>You have unsettled expenses</span>
-          <button @click="handleSettleUp" class="px-2 py-1 text-sm rounded border border-gray-300 hover:bg-gray-100 transition cursor-pointer">
+          <button @click="toggleSettleUpModal" class="px-2 py-1 text-sm rounded border border-gray-300 bg-yellow-200 transition cursor-pointer">
             Settle up
           </button>
         </div>
@@ -243,6 +264,20 @@ const handleUpdateMembers = (removedMemberIds) => {
       :group
       @membersUpdated="handleUpdateMembers"
       @modalClosed="showMembersModal = false"
+    />
+
+    <CreateExpenseModal
+      :showCreateExpenseModal
+      :groupId="group?.referenceId || ''"
+      @expenseCreated="handleExpenseCreated"
+      @modalClosed="showCreateExpenseModal = false"
+    />
+
+    <SettleUpModal
+      :showSettleUpModal
+      :groupId="group?.referenceId || ''"
+      @expensesSettled="handleSettleUp"
+      @modalClosed="showSettleUpModal = false"
     />
 
   </BaseLayout>

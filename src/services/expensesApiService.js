@@ -20,8 +20,16 @@ export const getExpense = async (referenceId) => {
   }
 }
 
-export const createExpense = async (data) => {
+export const createExpense = async (groupId, name, description, category = '') => {
   try {
+
+    const data = {
+      groupId,
+      name,
+      description,
+      category
+    }
+
     const response = await apiClient.post('/expenses', data);
     return response.data.data;
   } catch (error) {

@@ -1,31 +1,24 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { updateGroup } from '@/services/groupsApiService'
+import { createExpense } from '@/services/expensesApiService'
 
 const props = defineProps({
-  showEditGroupModal: Boolean,
-  groupName: String,
+  showSettleUpModal: Boolean,
   groupId: String
 })
 
-const emit = defineEmits(['groupUpdated', 'modalClosed'])
+const emit = defineEmits(['expensesSettled', 'modalClosed'])
 
-const showModal = ref(props.showEditGroupModal)
-const groupName = ref(props.groupName)
+const showModal = ref(props.showSettleUpModal)
+const groupId = ref(props.groupId)
+
 const loading = ref(false)
 const error = ref('')
 
 watch(
-  () => props.showEditGroupModal,
+  () => props.showSettleUpModal,
   (newValue) => {
     showModal.value = newValue
-  }
-)
-
-watch(
-  () => props.groupName,
-  (newGroupName) => {
-    groupName.value = newGroupName 
   }
 )
 
@@ -37,18 +30,13 @@ const toggleModal = () => {
   }
 }
 
-const handleUpdateGroup = async () => {
-  if (!groupName.value.trim()) {
-    error.value = 'Group name is required'
-    return
-  }
-
+const handleSettleUp = async () => {
   error.value = ''
   loading.value = true
 
   try {
-    const group = await updateGroup(props.groupId, groupName.value)
-    emit('groupUpdated', group)
+    //const expense = await createExpense()
+    emit('expensesSettled')
     toggleModal()
   } catch (err) {
     error.value = err.response?.data?.message || 'An error occurred'
@@ -68,26 +56,16 @@ const handleUpdateGroup = async () => {
       <!-- Modal Header -->
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold text-gray-900">
-          Edit Group
+          Settle Up
         </h3>
         <button @click="toggleModal" class="text-gray-400 hover:text-gray-600">
           ✕
         </button>
       </div>
 
-      <!-- Group Name Input -->
+      <!-- Modal Body -->
       <div class="mb-4">
-        <input
-          v-model="groupName"
-          type="text"
-          placeholder="Group name"
-          class="w-full rounded border px-3 py-2 text-sm"
-          :class="error ? 'border-red-500' : 'border-gray-300'"
-          :disabled="loading"
-        />
-        <p v-if="error" class="mt-2 text-sm text-red-500">
-          {{ error }}
-        </p>
+        <p>Settle up!</p>
       </div>
 
       <!-- Modal Footer -->
@@ -95,9 +73,9 @@ const handleUpdateGroup = async () => {
         <button @click="toggleModal" class="px-4 py-2 rounded bg-gray-200" :disabled="loading">
           Cancel
         </button>
-        <button @click="handleUpdateGroup" class="px-4 py-2 rounded bg-black text-white" :disabled="loading">
+        <button @click="handleSettleUp" class="px-4 py-2 rounded bg-black text-white" :disabled="loading">
           <span v-if="loading">Updating...</span>
-          <span v-else>Update</span>
+          <span v-else>Settle</span>
         </button>
       </div>
     </div>
