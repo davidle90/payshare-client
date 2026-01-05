@@ -1,55 +1,93 @@
 <script setup>
+import EditGroupModal from '@/components/EditGroupModal.vue';
 import GroupDebtList from '@/components/GroupDebtList.vue';
+import LeaveGroupModal from '@/components/LeaveGroupModal.vue';
 import BaseLayout from '@/layouts/BaseLayout.vue';
+
 import { getGroup } from '@/services/groupsApiService';
 import { onMounted, ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
 const route = useRoute();
 const referenceId = route.params.id;
 
 const group = ref(null);
 const members = ref([]);
 const expenses = ref([]);
+
+const groupName = ref('')
 const hasUnsettled = computed(() => expenses.value.some(e => !e.isSettled))
+
 const showActionsDropdown = ref(false)
+const showMembersModal = ref(false)
+
+const showEditGroupModal = ref(false)
+const showLeaveGroupModal = ref(false)
 
 onMounted(async () => {
   group.value = await getGroup(referenceId);
   members.value = group.value.members;
   expenses.value = group.value.expenses;
+
+  groupName.value = group.value.name;
 });
-
-const handleSettleUp = () => {
-  console.log('Settle up')
-}
-
-const showExpenseData = () => {
-    console.log('Show expense data')
-}
-
-const createExpense = () => {
-    console.log('Create expense')
-}
 
 const toggleActionsDropdown = () => {
   showActionsDropdown.value = !showActionsDropdown.value
 }
 
-function editGroup() {
-  console.log('Edit group clicked')
-  showActionsDropdown.value = false
+const toggleMembersModal = () => {
+  showActionsDropdown.value = false;
+  showMembersModal.value = !showMembersModal.value
 }
 
-function leaveGroup() {
-  console.log('Leave group clicked')
-  showActionsDropdown.value = false
+const handleSettleUp = () => {
+  showActionsDropdown.value = false;
+  console.log('Settle up')
 }
+
+const showExpenseData = () => {
+    showActionsDropdown.value = false;
+    console.log('Show expense data')
+}
+
+const createExpense = () => {
+    showActionsDropdown.value = false;
+    console.log('Create expense')
+}
+
+//Update group
+
+function editGroup() {
+  showActionsDropdown.value = false;
+
+  groupName.value = group.value.name;
+  showEditGroupModal.value = true;
+}
+
+const handleGroupUpdated = (updatedGroup) => {
+  groupName.value = updatedGroup.name;
+  showEditGroupModal.value = false;
+};
+
+//Leave group
+
+function leaveGroup() {
+  showActionsDropdown.value = false
+  showLeaveGroupModal.value = true;
+}
+
+const handleLeaveGroup = () => {
+  showLeaveGroupModal.value = false;
+  router.push('/dashboard');
+};
+
 </script>
 
 <template>
   <BaseLayout>
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-6" @click.self="showActionsDropdown = false">
       <router-link to="/dashboard" class="underline text-gray-700 hover:text-gray-900">Back</router-link>
       <div class="relative">
         <!-- Dropdown trigger -->
@@ -86,13 +124,23 @@ function leaveGroup() {
 
     <div v-if="group">
       <div class="mb-4">
-        <h1 class="text-2xl font-bold">{{ group.name }}</h1>
+        <h1 class="text-2xl font-bold">{{ groupName }}</h1>
         <span class="text-sm text-gray-500">{{ group.referenceId }}</span>
       </div>
 
       <!-- Members -->
       <section class="mb-4">
-        <h2 class="text-lg font-semibold mb-2">Members</h2>
+        <div class="flex justify-between">
+          <h2 class="text-lg font-semibold mb-2">Members</h2>
+          <div>
+            <button 
+              @click="toggleMembersModal" 
+              class="px-3 py-1 rounded bg-gray-800 text-sm text-white hover:bg-gray-700 transition-colors cursor-pointer"
+            >
+              Manage
+            </button>
+          </div>
+        </div>
         <div class="flex flex-wrap gap-2">
           <span
             v-for="member in members"
@@ -166,5 +214,22 @@ function leaveGroup() {
         </div>
       </div>
     </div>
+
+    <!-- MODALS -->
+    <EditGroupModal
+      :showEditGroupModal="showEditGroupModal"
+      :groupName="groupName"
+      :groupId="group?.referenceId || ''"
+      @groupUpdated="handleGroupUpdated"
+      @modalClosed="showEditGroupModal = false"
+    />
+
+    <LeaveGroupModal
+      :showLeaveGroupModal="showLeaveGroupModal"
+      :group
+      @groupLeft="handleLeaveGroup"
+      @modalClosed="showLeaveGroupModal = false"
+    />
+
   </BaseLayout>
 </template>

@@ -12,6 +12,7 @@ if (userId) {
   (async () => {
     try {
       debts.value = await getUserDebts(userId);
+      debts.value = debts.value.filter(d => !!d.toUser)
     } catch (error) {
       console.error('Failed to fetch debts:', error);
     }
