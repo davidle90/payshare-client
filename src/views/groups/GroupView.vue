@@ -2,6 +2,7 @@
 import EditGroupModal from '@/components/EditGroupModal.vue';
 import GroupDebtList from '@/components/GroupDebtList.vue';
 import LeaveGroupModal from '@/components/LeaveGroupModal.vue';
+import ManageMembersModal from '@/components/ManageMembersModal.vue';
 import BaseLayout from '@/layouts/BaseLayout.vue';
 
 import { getGroup } from '@/services/groupsApiService';
@@ -81,6 +82,12 @@ function leaveGroup() {
 const handleLeaveGroup = () => {
   showLeaveGroupModal.value = false;
   router.push('/dashboard');
+};
+
+//Update members
+const handleUpdateMembers = (removedMemberIds) => {
+  showMembersModal.value = false;
+  members.value = members.value.filter(m => !removedMemberIds.includes(m.id));
 };
 
 </script>
@@ -229,6 +236,13 @@ const handleLeaveGroup = () => {
       :group
       @groupLeft="handleLeaveGroup"
       @modalClosed="showLeaveGroupModal = false"
+    />
+
+    <ManageMembersModal
+      :showMembersModal
+      :group
+      @membersUpdated="handleUpdateMembers"
+      @modalClosed="showMembersModal = false"
     />
 
   </BaseLayout>

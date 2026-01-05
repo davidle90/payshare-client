@@ -77,11 +77,19 @@ export const joinGroup = async (referenceId, userId) => {
 }
 
 export const leaveGroup = async (referenceId, memberId) => {
+  console.log('asdasd');
   try {
     const response = await apiClient.delete('/expense-groups/'+referenceId+'/members/'+memberId);
     return response.data.data;
   } catch (error) {
     console.log('Failed to leave group:', error);
     throw error;
+  }
+}
+
+export const removeGroupMembers = async (referenceId, memberIds) => {
+  const values = Object.values(memberIds);
+  for (const memberId of values) {
+    await leaveGroup(referenceId, memberId);
   }
 }
