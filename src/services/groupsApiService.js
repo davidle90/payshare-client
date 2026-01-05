@@ -20,8 +20,14 @@ export const getGroup = async (referenceId) => {
   }
 }
 
-export const createGroup = async (data) => {
+export const createGroup = async (name, currency = 'SEK') => {
   try {
+
+    const data = {
+      name,
+      currency
+    }
+
     const response = await apiClient.post('/expense-groups/', data);
     return response.data.data;
   } catch (error) {
@@ -30,8 +36,13 @@ export const createGroup = async (data) => {
   }
 }
 
-export const updateGroup = async (referenceId, data) => {
+export const updateGroup = async (referenceId, name) => {
   try {
+
+    const data = {
+      name
+    }
+
     const response = await apiClient.put('/expense-groups/'+referenceId, data);
     return response.data.data;
   } catch (error) {
@@ -52,7 +63,12 @@ export const deleteGroup = async (referenceId) => {
 
 export const joinGroup = async (referenceId, userId) => {
   try {
-    const response = await apiClient.post('/expense-groups/'+referenceId+'/members', userId);
+
+    const data = {
+      userId
+    }
+
+    const response = await apiClient.post('/expense-groups/'+referenceId+'/members', data);
     return response.data.data;
   } catch (error) {
     console.log('Failed to join group:', error);
