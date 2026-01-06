@@ -112,7 +112,7 @@ const handleUpdateMembers = (removedMemberIds) => {
 <template>
   <BaseLayout>
     <div class="flex justify-between items-center mb-6" @click.self="showActionsDropdown = false">
-      <router-link to="/dashboard" class="underline text-gray-700 hover:text-gray-900">Back</router-link>
+      <router-link to="/dashboard" class="underline text-gray-700 hover:text-gray-900">Return to dashboard</router-link>
       <div class="relative">
         <!-- Dropdown trigger -->
         <button 
