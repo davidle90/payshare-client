@@ -10,6 +10,7 @@ import SettingsView from '../views/dashboard/SettingsView.vue';
 
 import NotFoundView from '../views/error/NotFoundView.vue'
 import GroupView from '@/views/groups/GroupView.vue';
+import EditExpenseView from '@/views/expenses/EditExpenseView.vue';
 
 const routes = [
     // public
@@ -25,6 +26,9 @@ const routes = [
 
     // groups
     { path: '/groups/:id', name: 'GroupsView', component: GroupView, meta: { requiresAuth: true} },
+
+    // expenses
+    { path: '/groups/:groupId/expenses/:expenseId/edit', name: 'EditExpenseView', component: EditExpenseView, meta: { requiresAuth: true} },
 
     // profile
 

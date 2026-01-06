@@ -272,6 +272,7 @@ const handleUpdateMembers = (removedMemberIds) => {
     <ViewExpenseModal
       :showViewExpenseModal="showViewExpenseModal"
       :selectedExpenseId="selectedExpenseId"
+      :groupId="group?.referenceId"
       @modalClosed="showViewExpenseModal = false"
     />
 
