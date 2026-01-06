@@ -5,6 +5,7 @@ import GroupDebtList from '@/components/GroupDebtList.vue';
 import LeaveGroupModal from '@/components/LeaveGroupModal.vue';
 import ManageMembersModal from '@/components/ManageMembersModal.vue';
 import SettleUpModal from '@/components/SettleUpModal.vue';
+import ViewExpenseModal from '@/components/ViewExpenseModal.vue';
 import BaseLayout from '@/layouts/BaseLayout.vue';
 
 import { getGroup } from '@/services/groupsApiService';
@@ -24,12 +25,13 @@ const hasUnsettled = computed(() => expenses.value.some(e => !e.isSettled))
 
 const showActionsDropdown = ref(false)
 const showMembersModal = ref(false)
-
 const showEditGroupModal = ref(false)
 const showLeaveGroupModal = ref(false)
-
 const showCreateExpenseModal = ref(false)
+const showViewExpenseModal = ref(false)
 const showSettleUpModal = ref(false)
+
+const selectedExpenseId = ref('')
 
 onMounted(async () => {
   group.value = await getGroup(referenceId);
@@ -40,66 +42,61 @@ onMounted(async () => {
 });
 
 // Toggle modals
-
 const toggleActionsDropdown = () => {
   showActionsDropdown.value = !showActionsDropdown.value
 }
-
 const toggleMembersModal = () => {
   showActionsDropdown.value = false;
   showMembersModal.value = !showMembersModal.value
 }
-
 const toggleSettleUpModal = () => {
   showActionsDropdown.value = false;
   showSettleUpModal.value = !showSettleUpModal.value
 }
-
 const toggleCreateExpenseModal = () => {
   showActionsDropdown.value = false;
   showCreateExpenseModal.value = !showCreateExpenseModal.value
 }
+const toggleViewExpenseModal = (expenseId = '') => {
+  showActionsDropdown.value = false;
+  showViewExpenseModal.value = !showViewExpenseModal.value;
+
+  if (!showViewExpenseModal.value) {
+    selectedExpenseId.value = '';
+  } else if (expenseId) {
+    selectedExpenseId.value = expenseId;
+  }
+};
 
 // Settle up
-
 const handleSettleUp = () => {
   showActionsDropdown.value = false;
   console.log('Settle up')
 }
 
 // Expense
-
-const showExpenseData = (expenseId) => {
-    showActionsDropdown.value = false;
-    console.log('Show expense data: ' + expenseId)
-}
-
 const handleExpenseCreated = (expense) => {
     showActionsDropdown.value = false;
     expenses.value.unshift(expense);
 }
 
 //Update group
-
 function editGroup() {
   showActionsDropdown.value = false;
 
   groupName.value = group.value.name;
   showEditGroupModal.value = true;
 }
-
 const handleGroupUpdated = (updatedGroup) => {
   groupName.value = updatedGroup.name;
   showEditGroupModal.value = false;
 };
 
 //Leave group
-
 function leaveGroup() {
   showActionsDropdown.value = false
   showLeaveGroupModal.value = true;
 }
-
 const handleLeaveGroup = () => {
   showLeaveGroupModal.value = false;
   router.push('/dashboard');
@@ -110,7 +107,6 @@ const handleUpdateMembers = (removedMemberIds) => {
   showMembersModal.value = false;
   members.value = members.value.filter(m => !removedMemberIds.includes(m.id));
 };
-
 </script>
 
 <template>
@@ -200,7 +196,7 @@ const handleUpdateMembers = (removedMemberIds) => {
           <div
             v-for="expense in expenses"
             :key="expense.id"
-            @click="showExpenseData"
+            @click="toggleViewExpenseModal(expense.referenceId)"
             class="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition"
           >
             <h3 class="font-medium text-gray-800">{{ expense.name }}</h3>
@@ -226,10 +222,10 @@ const handleUpdateMembers = (removedMemberIds) => {
       <div class="fixed bottom-16 left-0 w-full flex justify-center px-4 z-50">
         <div 
           v-if="hasUnsettled"
-          class="px-4 py-2 bg-yellow-100 rounded border border-gray-300 bg-white text-gray-800 flex items-center gap-2"
+          class="px-4 py-2 rounded border border-blue-100 bg-blue-50 shadow-md flex items-center gap-2"
         >
           <span>You have unsettled expenses</span>
-          <button @click="toggleSettleUpModal" class="px-2 py-1 text-sm rounded border border-gray-300 bg-yellow-200 transition cursor-pointer">
+          <button @click="toggleSettleUpModal" class="px-2 py-1 text-sm rounded shadow-sm bg-blue-200 transition cursor-pointer">
             Settle up
           </button>
         </div>
@@ -271,6 +267,12 @@ const handleUpdateMembers = (removedMemberIds) => {
       :groupId="group?.referenceId || ''"
       @expenseCreated="handleExpenseCreated"
       @modalClosed="showCreateExpenseModal = false"
+    />
+
+    <ViewExpenseModal
+      :showViewExpenseModal="showViewExpenseModal"
+      :selectedExpenseId="selectedExpenseId"
+      @modalClosed="showViewExpenseModal = false"
     />
 
     <SettleUpModal

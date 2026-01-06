@@ -12,7 +12,7 @@ export const getExpenses = async () => {
 
 export const getExpense = async (referenceId) => {
   try {
-    const response = await apiClient.get('/expenses/'+referenceId);
+    const response = await apiClient.get('/expenses/'+referenceId+'?includes=contributors,participants');
     return response.data.data;
   } catch (error) {
     console.log('Failed to fetch expense:', error);
