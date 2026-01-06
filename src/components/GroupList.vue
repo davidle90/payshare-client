@@ -14,7 +14,7 @@ const goToGroup = async (referenceId) => {
 
 const hasUnsettled = (expenses) => {
     if(!expenses) return false;
-    return expenses.some(e => !e.isSettled);
+    return expenses.some(e => !e.isSettled && e.status === 'finalized');
 }
 </script>
 
