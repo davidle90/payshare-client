@@ -67,7 +67,7 @@ const toggleModal = () => {
         <p class="text-gray-700">{{ expense.description }}</p>
 
         <span class="font-semibold">Status: </span>
-        <small :class="[expense?.status == 'finalized' ? 'text-green-600' : 'text-blue-600']" class="font-semibold">
+        <small :class="[expense?.status == 'finalized' ? 'text-green-600 ' : 'text-blue-600']" class="font-semibold capitalize">
           {{ expense?.status }}
         </small>
         <!-- Total Amount -->

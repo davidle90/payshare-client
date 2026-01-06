@@ -208,6 +208,12 @@ const handleUpdateMembers = (removedMemberIds) => {
                 {{ expense.isSettled ? 'Settled' : 'Pending' }}
               </span>
             </p>
+            <p class="text-sm text-gray-700">
+              <strong>Status: </strong>
+              <span :class="expense.status === 'finalized' ? 'text-green-600 capitalize' : 'text-blue-600 capitalize'">
+                {{ expense.status }}
+              </span>
+            </p>
             <p class="text-xs text-gray-400 mt-1">Created: {{ new Date(expense.createdAt).toLocaleDateString() }}</p>
           </div>
         </div>
