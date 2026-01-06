@@ -55,3 +55,17 @@ export const simplifyBalance = async (groupId) => {
     throw error;
   }
 }
+
+export const settleUpByGroupId = async (groupId) => {
+  if(!groupId) {
+    return;
+  }
+
+  try {
+    const response = await apiClient.get('/expense-groups/'+groupId+'/balance/settleup');
+    return await response.data.data;
+  } catch (error) {
+    console.log('Failed to settle up group:', error);
+    throw error;
+  }
+}

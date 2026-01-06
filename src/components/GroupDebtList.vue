@@ -23,6 +23,7 @@ const visibleDebts = computed(() => {
   return debts.value.filter(debt => {
     if (debt.amount <= 0) return false
     if (!debt.fromUser?.id || !debt.toUser?.id) return false
+    if (debt.isSettled) return false
 
     const key = `${debt.fromUser.id}-${debt.toUser.id}`
     if (seen.has(key)) return false

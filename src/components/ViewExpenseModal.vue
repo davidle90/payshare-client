@@ -111,12 +111,12 @@ const toggleModal = () => {
 
       <!-- Modal Footer -->
       <div class="flex justify-end gap-4 mt-6">
-        <router-link @click="toggleModal" :to="'/expenses/'+expense?.referenceId+'/edit'" class="px-6 py-1 rounded bg-black text-white cursor-pointer">
-          Edit
-        </router-link>
         <button @click="toggleModal" class="px-6 py-1 rounded bg-gray-200 hover:bg-gray-300 transition text-gray-800 cursor-pointer">
           Close
         </button>
+        <router-link v-if="expense?.status !== 'finalized'" @click="toggleModal" :to="'/expenses/'+expense?.referenceId+'/edit'" class="px-6 py-1 rounded bg-black text-white cursor-pointer">
+          Edit
+        </router-link>
       </div>
     </div>
   </div>

@@ -21,7 +21,7 @@ const members = ref([]);
 const expenses = ref([]);
 
 const groupName = ref('')
-const hasUnsettled = computed(() => expenses.value.some(e => !e.isSettled))
+const hasUnsettled = computed(() => expenses.value.some(e => !e.isSettled && e.status === 'finalized'))
 
 const showActionsDropdown = ref(false)
 const showMembersModal = ref(false)
@@ -69,9 +69,9 @@ const toggleViewExpenseModal = (expenseId = '') => {
 };
 
 // Settle up
-const handleSettleUp = () => {
+const handleSettleUp = async () => {
   showActionsDropdown.value = false;
-  console.log('Settle up')
+  group.value = await getGroup(referenceId);
 }
 
 // Expense
@@ -278,6 +278,7 @@ const handleUpdateMembers = (removedMemberIds) => {
     <SettleUpModal
       :showSettleUpModal
       :groupId="group?.referenceId || ''"
+      :members="members"
       @expensesSettled="handleSettleUp"
       @modalClosed="showSettleUpModal = false"
     />
