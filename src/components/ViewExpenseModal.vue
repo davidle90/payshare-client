@@ -5,6 +5,7 @@ import { ref, watch } from 'vue'
 const props = defineProps({
   showViewExpenseModal: Boolean,
   selectedExpenseId: String,
+  groupId: String
 })
 
 const emit = defineEmits(['modalClosed'])
@@ -114,7 +115,7 @@ const toggleModal = () => {
         <button @click="toggleModal" class="px-6 py-1 rounded bg-gray-200 hover:bg-gray-300 transition text-gray-800 cursor-pointer">
           Close
         </button>
-        <router-link v-if="expense?.status !== 'finalized'" @click="toggleModal" :to="'/expenses/'+expense?.referenceId+'/edit'" class="px-6 py-1 rounded bg-black text-white cursor-pointer">
+        <router-link v-if="expense?.status !== 'finalized'" @click="toggleModal" :to="'/groups/'+groupId+'/expenses/'+expense?.referenceId+'/edit'" class="px-6 py-1 rounded bg-black text-white cursor-pointer">
           Edit
         </router-link>
       </div>

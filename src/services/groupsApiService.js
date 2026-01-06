@@ -63,7 +63,6 @@ export const deleteGroup = async (referenceId) => {
 
 export const joinGroup = async (referenceId, userId) => {
   try {
-
     const data = {
       userId
     }
@@ -77,12 +76,21 @@ export const joinGroup = async (referenceId, userId) => {
 }
 
 export const leaveGroup = async (referenceId, memberId) => {
-  console.log('asdasd');
   try {
     const response = await apiClient.delete('/expense-groups/'+referenceId+'/members/'+memberId);
     return response.data.data;
   } catch (error) {
     console.log('Failed to leave group:', error);
+    throw error;
+  }
+}
+
+export const getGroupMembers = async (referenceId) => {
+  try {
+    const response = await apiClient.get('/expense-groups/'+referenceId+'/members')
+    return response.data.data;
+  } catch (error) {
+    console.log('Failed to fetch group members: ', error)
     throw error;
   }
 }
