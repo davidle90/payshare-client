@@ -95,19 +95,8 @@ const handleSettleUp = async () => {
       <!-- Modal Body -->
       <div class="space-y-4 mb-8">
         <p class="text-gray-700 text-lg">It's time to settle up your expenses!</p>
-        <p class="text-gray-600">Click "Calculate" to minimize the transactions and balance things out.</p>
-
-        <!-- Calculate Button -->
-        <button
-          v-if="!transactions"
-          @click="simplifyTransactions"
-          class="mt-4 w-full py-2 rounded bg-blue-500 text-white font-medium hover:bg-blue-600 focus:outline-none"
-          :disabled="loading"
-        >
-          <span v-if="loading">Calculating...</span>
-          <span v-else>Calculate</span>
-        </button>
-
+        <p v-if="!transactions" class="text-gray-600">Click "Calculate" to minimize the transactions and balance things out.</p>
+        
         <!-- Display Transactions -->
         <div v-else>
           <ul class="space-y-2">
@@ -118,6 +107,17 @@ const handleSettleUp = async () => {
             </li>
           </ul>
         </div>
+        
+        <!-- Calculate Button -->
+        <button
+          v-if="!transactions"
+          @click="simplifyTransactions"
+          class="mt-4 w-full py-2 rounded bg-blue-500 text-white font-medium hover:bg-blue-600 focus:outline-none"
+          :disabled="loading"
+        >
+          <span v-if="loading">Calculating...</span>
+          <span v-else>Calculate</span>
+        </button>
       </div>
 
       <div class="flex justify-end gap-3">

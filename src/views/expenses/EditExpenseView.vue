@@ -31,6 +31,7 @@ const contributors = ref([]); // Local contributors array
 const participants = ref([]); // Local participants array
 
 const showDeleteModal = ref(false);
+const showLoadingModal = ref(false);
 
 onMounted(async () => {
   await loadComponentData();
@@ -154,10 +155,11 @@ const saveExpense = async (reload = true) => {
     }
   }
     
-  // Reload the component data to ensure participants, contributors, and status are updated
   if(reload) {
     await loadComponentData();
     loading.value = false;
+
+    showSavedToast()
   }
 };
 
@@ -188,6 +190,15 @@ const handleDeleteExpense = async () => {
   }
 
   loading.value = false;
+}
+
+const showToast = ref(false)
+
+function showSavedToast() {
+  showToast.value = true
+  setTimeout(() => {
+    showToast.value = false
+  }, 2000)
 }
 </script>
 
@@ -299,6 +310,28 @@ const handleDeleteExpense = async () => {
             </div>
             <div v-else>
                 <div class="flex flex-col items-center gap-2">
+                  <transition
+                    enter-active-class="transition ease-out duration-300"
+                    enter-from-class="opacity-0 translate-y-3"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition ease-in duration-200"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                  >
+                    <div
+                      v-if="showToast"
+                      class="fixed inset-x-4 bottom-4 z-50
+                            mx-auto flex max-w-sm items-center gap-3
+                            rounded-xl bg-emerald-600 px-4 py-3
+                            text-base font-medium text-white
+                            shadow-xl
+                            sm:inset-x-auto sm:right-6 sm:bottom-6"
+                    >
+                      <span class="text-xl">✅</span>
+                      <span>Saved successfully</span>
+                    </div>
+                  </transition>
+
                     <button
                         @click="saveExpense(true)"
                         class="w-full px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
@@ -322,6 +355,7 @@ const handleDeleteExpense = async () => {
                     <button
                         @click="toggleDeleteModal"
                         class="font-semibold text-red-600 hover:text-red-700 cursor-pointer flex items-center"
+                        :disabled="loading"
                     >
                         <TrashIcon class="w-4 h-4" /> Delete Expense
                     </button>
