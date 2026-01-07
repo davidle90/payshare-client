@@ -1,7 +1,10 @@
 <script setup>
+import { useRouter } from 'vue-router';
 import BaseLayout from '../../layouts/BaseLayout.vue';
 import { register } from '../../services/authApiService';
 import { ref } from 'vue';
+
+const router = useRouter();
 
 const username = ref('');
 const email = ref('');
@@ -25,11 +28,10 @@ const handleRegister = async () => {
   const response = await register(username.value, email.value, password.value);
 
   if(response.success){
-    console.log(response.message)
+    router.push('/dashboard')
   } else {
     errorMessage.value = response.message;
   }
-  
 }
 </script>
 
