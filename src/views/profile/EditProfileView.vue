@@ -65,7 +65,7 @@ const handleUpdateProfile = async () => {
       showSavedToast()
       password.value = ''
       confirmPassword.value = ''
-      await checkAuth();
+      authStore.setAuth(authStore.token, response.data.data)
     }
   } catch (err) {
     console.error(err)
