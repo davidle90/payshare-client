@@ -1,13 +1,12 @@
 <script setup>
-import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '../stores/auth.js'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
-const { user, isAuthenticated } = storeToRefs(authStore)
+const isAuthenticated = ref(authStore.isAuthenticated)
+const user = ref(authStore.user)
 const router = useRouter()
-
 const showDropdown = ref(false)
 
 const toggleDropdown = () => (showDropdown.value = !showDropdown.value)

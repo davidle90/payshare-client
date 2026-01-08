@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth'
-import { updateAccount, deleteAccount } from '@/services/authApiService'
+import { updateAccount, deleteAccount, checkAuth } from '@/services/authApiService'
 import { useRouter } from 'vue-router'
 import BaseLayout from '@/layouts/BaseLayout.vue'
 
@@ -65,6 +65,7 @@ const handleUpdateProfile = async () => {
       showSavedToast()
       password.value = ''
       confirmPassword.value = ''
+      await checkAuth();
     }
   } catch (err) {
     console.error(err)

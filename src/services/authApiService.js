@@ -76,14 +76,7 @@ export const updateAccount = async (username = null, email = null, password = nu
       password,
     }
 
-    const authStore = useAuthStore()
-    const response = await apiClient.patch('/users/me', data)
-
-    if(response.data?.data) {
-      console.log(response.data)
-      const token = localStorage.getItem('authToken')
-      authStore.setAuth(token, response.data.data)
-    }
+    await apiClient.patch('/users/me', data)
 
     return { success: true }
   } catch (error) {
