@@ -30,6 +30,6 @@ export const useAuthStore = defineStore('auth', {
   },
 
   getters: {
-    userId: (state) => state.user?.id || null
+    userId: (state) => state.user?.id || null,
   }
 });

@@ -31,7 +31,6 @@ const contributors = ref([]); // Local contributors array
 const participants = ref([]); // Local participants array
 
 const showDeleteModal = ref(false);
-const showLoadingModal = ref(false);
 
 onMounted(async () => {
   await loadComponentData();

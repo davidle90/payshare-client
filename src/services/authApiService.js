@@ -67,3 +67,36 @@ export const checkAuth = async () => {
     return { success: false, message: 'Error while doing auth check: ' + error.message }
   }
 }
+
+export const updateAccount = async (username = null, email = null, password = null) => {
+  try {
+    const data = {
+      username,
+      email,
+      password,
+    }
+
+    const authStore = useAuthStore()
+    const response = await apiClient.patch('/users/me', data)
+
+    if(response.data?.data) {
+      console.log(response.data)
+      const token = localStorage.getItem('authToken')
+      authStore.setAuth(token, response.data.data)
+    }
+
+    return { success: true }
+  } catch (error) {
+    return { success: false, message: 'Error while updating account: ' + error.message }
+  }
+}
+
+export const deleteAccount = async () => {
+  try {
+    const response = await apiClient.delete('/users/me');
+    return { success: response.status === 200};
+  } catch (error) {
+    console.log('Failed to delete account:', error);
+    throw error;
+  }
+}

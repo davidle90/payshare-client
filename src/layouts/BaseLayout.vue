@@ -5,8 +5,7 @@
 <template>
   <div class="h-screen flex flex-col">
     <!-- Header -->
-    <header class="bg-white shadow p-4 text-center font-semibold text-xl">
-      <!-- If no header slot is provided, display the Header component by default -->
+    <header>
       <slot name="header"><Header /></slot>
     </header>
 

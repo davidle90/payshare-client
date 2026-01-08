@@ -1,6 +1,10 @@
 <script setup>
+import BaseLayout from '@/layouts/BaseLayout.vue';
+
 </script>
 
 <template>
-    <h1>SETTINGS</h1>
+    <BaseLayout>
+        <h1>SETTINGS</h1>
+    </BaseLayout>
 </template>
