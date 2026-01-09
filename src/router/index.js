@@ -11,6 +11,7 @@ import SettingsView from '../views/dashboard/SettingsView.vue';
 import NotFoundView from '../views/error/NotFoundView.vue'
 import GroupView from '@/views/groups/GroupView.vue';
 import EditExpenseView from '@/views/expenses/EditExpenseView.vue';
+import EditProfileView from '@/views/profile/EditProfileView.vue';
 
 const routes = [
     // public
@@ -31,9 +32,9 @@ const routes = [
     { path: '/groups/:groupId/expenses/:expenseId/edit', name: 'EditExpenseView', component: EditExpenseView, meta: { requiresAuth: true} },
 
     // profile
+    { path: '/profile', name: 'Profile', component: EditProfileView, meta: { requiresAuth: true} },
 
     // logout
-
     {
       path: '/logout',
       name: 'logout',

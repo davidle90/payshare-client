@@ -6,28 +6,27 @@ import { checkAuth } from './services/authApiService.js'
 const authStore = useAuthStore()
 
 onMounted(async () => {
-  const token = localStorage.getItem('authToken')
+  authStore.initializeAuth()
 
-  if (token) {
-    authStore.token = token
+  // if (authStore.token) {
+  //   try {
+  //     const response = await checkAuth()
 
-    try {
-      const response = await checkAuth()
+  //     if (response.success) {
+  //       authStore.updateUser(response.user)
+  //       localStorage.setItem('authUser', JSON.stringify(response.user))
+  //     } else {
+  //       authStore.logout()
+  //     }
+  //   } catch (error) {
+  //     console.error('Auth check failed:', error)
+  //     authStore.logout()
+  //   }
+  // } else {
+  //   authStore.isAuthenticated = false
+  // }
 
-      if (response.success) {
-        authStore.setAuth(token, response.user)
-      } else {
-        authStore.logout()
-      }
-    } catch (error) {
-      console.error('Auth check failed:', error)
-      authStore.logout()
-    }
-  } else {
-    authStore.isAuthenticated = false
-  }
-
-  authStore.finishInit()
+  // authStore.finishInit()
 
 })
 </script>

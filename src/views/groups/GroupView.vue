@@ -7,7 +7,6 @@ import ManageMembersModal from '@/components/ManageMembersModal.vue';
 import SettleUpModal from '@/components/SettleUpModal.vue';
 import ViewExpenseModal from '@/components/ViewExpenseModal.vue';
 import BaseLayout from '@/layouts/BaseLayout.vue';
-import { ClipboardIcon } from '@heroicons/vue/24/solid'
 
 import { getGroup } from '@/services/groupsApiService';
 import { onMounted, ref, computed } from 'vue';

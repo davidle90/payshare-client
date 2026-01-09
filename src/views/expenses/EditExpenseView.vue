@@ -31,7 +31,6 @@ const contributors = ref([]); // Local contributors array
 const participants = ref([]); // Local participants array
 
 const showDeleteModal = ref(false);
-const showLoadingModal = ref(false);
 
 onMounted(async () => {
   await loadComponentData();
@@ -129,7 +128,6 @@ const saveExpense = async (reload = true) => {
   // Update participants and contributors after saving expense
   for (const participant of participants.value) {
     const existingParticipant = oldExpense.participants.find(p => p.memberId === participant.memberId);
-    
     if (existingParticipant) {
       if (existingParticipant.amountOwed !== participant.amountOwed) {
         await updateParticipant(expenseId, participant.id, participant.amountOwed);

@@ -9,6 +9,10 @@ const isAuthenticated = ref(authStore.isAuthenticated)
 const routeTo = computed(() => {
   return isAuthenticated.value ? '/dashboard' : '/login'
 })
+const ctaText = computed(() => {
+  return isAuthenticated.value ? 'Dashboard' : 'Get started'
+})
+
 </script>
 
 <template>
@@ -30,7 +34,7 @@ const routeTo = computed(() => {
         :to="routeTo"
         class="bg-gray-900 text-white px-8 py-3 rounded-lg text-base font-medium hover:bg-gray-800 transition"
       >
-        Get started
+        {{ ctaText }}
       </router-link>
 
       <!-- Feature hints -->

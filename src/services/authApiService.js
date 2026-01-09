@@ -39,7 +39,7 @@ export const login = async (email, password) => {
 
     const token = response.data.access_token
     const user = response.data.user
-    localStorage.setItem('authToken', token)
+
     authStore.setAuth(token, user)
 
     return { success: true, message: "Authenticated" }
@@ -65,5 +65,34 @@ export const checkAuth = async () => {
     return { success: true, message: response.data.message, user: response.data.user }
   } catch (error) {
     return { success: false, message: 'Error while doing auth check: ' + error.message }
+  }
+}
+
+export const updateAccount = async (username = null, email = null, password = null) => {
+  try {
+    const data = {
+      username,
+      email,
+    }
+
+    if(password) {
+      data.password = password;
+    }
+
+    const response = await apiClient.patch('/users/me', data)
+
+    return { success: true, data: response.data.data }
+  } catch (error) {
+    return { success: false, message: 'Error while updating account: ' + error.message }
+  }
+}
+
+export const deleteAccount = async () => {
+  try {
+    const response = await apiClient.delete('/users/me');
+    return { success: response.status === 200};
+  } catch (error) {
+    console.log('Failed to delete account:', error);
+    throw error;
   }
 }

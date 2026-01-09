@@ -63,11 +63,11 @@ export const deleteExpense = async (referenceId) => {
   }
 }
 
-export const createParticipant = async (expenseId, memberId, amountOwed) => {
+export const createParticipant = async (expenseId, memberId, amountOwed = 0) => {
   try {
     const data = {
       memberId,
-      amountOwed,
+      amountOwed: Number(amountOwed) || 0,
     }
 
     const response = await apiClient.post('/expenses/'+expenseId+'/participants', data);
@@ -78,14 +78,14 @@ export const createParticipant = async (expenseId, memberId, amountOwed) => {
   }
 }
 
-export const updateParticipant = async (expenseId, participantId, amountOwed) => {
+export const updateParticipant = async (expenseId, participantId, amountOwed = 0) => {
   if(!participantId) {
     return;
   }
 
   try {
     const data = {
-      amountOwed,
+      amountOwed: Number(amountOwed) || 0,
     }
 
     const response = await apiClient.put('/expenses/'+expenseId+'/participants/'+participantId, data);
@@ -96,11 +96,11 @@ export const updateParticipant = async (expenseId, participantId, amountOwed) =>
   }
 }
 
-export const createContributor = async (expenseId, memberId, amountPaid) => {
+export const createContributor = async (expenseId, memberId, amountPaid = 0) => {
   try {
     const data = {
       memberId,
-      amountPaid,
+      amountPaid: Number(amountPaid) || 0,
     }
 
     const response = await apiClient.post('/expenses/'+expenseId+'/contributors', data);
@@ -111,14 +111,14 @@ export const createContributor = async (expenseId, memberId, amountPaid) => {
   }
 }
 
-export const updateContributor = async (expenseId, contributorId, amountPaid) => {
+export const updateContributor = async (expenseId, contributorId, amountPaid = 0) => {
   if(!contributorId) {
     return;
   }
 
   try {
     const data = {
-      amountPaid,
+      amountPaid: Number(amountPaid) || 0,
     }
 
     const response = await apiClient.put('/expenses/'+expenseId+'/contributors/'+contributorId, data);

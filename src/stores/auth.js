@@ -14,9 +14,26 @@ export const useAuthStore = defineStore('auth', {
       this.user = user
       this.isAuthenticated = true
       this.initialized = true
+      localStorage.setItem('authToken', token)
+      localStorage.setItem('authUser', JSON.stringify(user))
+    },
+
+    updateUser(updatedFields) {
+      this.user = { ...this.user, ...updatedFields }
     },
 
     finishInit() {
+      this.initialized = true
+    },
+
+    initializeAuth() {
+      const token = localStorage.getItem('authToken')
+      const user = JSON.parse(localStorage.getItem('authUser'))
+      if (token && user) {
+        this.token = token
+        this.user = user
+        this.isAuthenticated = true
+      }
       this.initialized = true
     },
 
@@ -30,6 +47,6 @@ export const useAuthStore = defineStore('auth', {
   },
 
   getters: {
-    userId: (state) => state.user?.id || null
+    userId: (state) => state.user?.id || null,
   }
 });
