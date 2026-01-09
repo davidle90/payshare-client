@@ -39,7 +39,7 @@ export const login = async (email, password) => {
 
     const token = response.data.access_token
     const user = response.data.user
-    localStorage.setItem('authToken', token)
+
     authStore.setAuth(token, user)
 
     return { success: true, message: "Authenticated" }
@@ -73,12 +73,15 @@ export const updateAccount = async (username = null, email = null, password = nu
     const data = {
       username,
       email,
-      password,
     }
 
-    await apiClient.patch('/users/me', data)
+    if(password) {
+      data.password = password;
+    }
 
-    return { success: true }
+    const response = await apiClient.patch('/users/me', data)
+
+    return { success: true, data: response.data.data }
   } catch (error) {
     return { success: false, message: 'Error while updating account: ' + error.message }
   }

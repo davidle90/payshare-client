@@ -4,15 +4,15 @@ import { useAuthStore } from '../stores/auth.js'
 import { useRouter } from 'vue-router'
 
 const authStore = useAuthStore()
-const isAuthenticated = ref(authStore.isAuthenticated)
-const user = ref(authStore.user)
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+const user = computed(() => authStore.user);
+
 const router = useRouter()
 const showDropdown = ref(false)
 
 const toggleDropdown = () => (showDropdown.value = !showDropdown.value)
 const handleLogout = async () => {
-  authStore.logout()
-  router.push('/login')
+  router.push('/logout')
 }
 </script>
 
@@ -30,7 +30,7 @@ const handleLogout = async () => {
           @click="toggleDropdown"
           class="flex items-center space-x-2 px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <span class="font-medium">{{ user.username }}</span>
+          <span class="font-medium">{{ user?.username }}</span>
           <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
@@ -41,18 +41,18 @@ const handleLogout = async () => {
           class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-20 animate-fade-in"
         >
           <router-link
+            to="/dashboard"
+            class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+            @click="showDropdown = false"
+          >
+            Dashboard
+          </router-link>
+          <router-link
             to="/profile"
             class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
             @click="showDropdown = false"
           >
             Profile
-          </router-link>
-          <router-link
-            to="/settings"
-            class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-            @click="showDropdown = false"
-          >
-            Settings
           </router-link>
           <button
             @click="handleLogout"
@@ -66,7 +66,7 @@ const handleLogout = async () => {
       <div v-else>
         <router-link
           to="/login"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          class="font-semibold text-blue-600 hover:text-blue-800"
         >
           Login
         </router-link>

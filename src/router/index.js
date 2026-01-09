@@ -35,7 +35,6 @@ const routes = [
     { path: '/profile', name: 'Profile', component: EditProfileView, meta: { requiresAuth: true} },
 
     // logout
-
     {
       path: '/logout',
       name: 'logout',
