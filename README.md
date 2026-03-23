@@ -35,6 +35,7 @@ npm install
 ## Configuration
 
 ```bash
+# ENV
 VITE_PAYSHARE_API_URL=http://localhost:3000
 ```
 
