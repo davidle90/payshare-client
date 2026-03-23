@@ -1,38 +1,48 @@
-# payshare-client
+# PayShare Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+The PayShare Frontend is a web application for managing shared expenses between groups. It provides an intuitive interface to create groups, track expenses, and view simplified balances. Designed to work with the PayShare NestJS backend.
 
-## Recommended IDE Setup
+## Features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **User Authentication:** Sign up, log in, and manage your account.  
+- **Groups Management:** Create and join groups, invite members, and view group details.  
+- **Expense Tracking:** Add, edit, and delete expenses within groups.  
+- **Simplified Balances:** See who owes whom and the minimized transactions between users.  
+- **Responsive UI:** Works on desktop and mobile devices.  
+- **Integration with Backend:** Communicates with the PayShare NestJS backend via REST API.
 
-## Recommended Browser Setup
+## Tech Stack
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- **Frontend Framework:** Vue.js  
+- **State Management:** Pinia  
+- **Styling:** Tailwind CSS  
+- **HTTP Client:** Axios  
+- **Backend Integration:** REST API with JWT authentication
 
-## Customize configuration
+## Installation
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+```bash
+# Clone the repository
+git clone https://github.com/davidle90/payshare-client.git
 
-## Project Setup
+# Navigate into the project
+cd payshare-client
 
-```sh
+# Install dependencies
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Configuration
 
-```sh
+```bash
+# Create a .env file in the project root with the following variables:
+VITE_PAYSHARE_API_URL=http://localhost:3000
+VITE_PAYSHARE_API_KEY=YOUR_PAYSHARE_API_KEY
+```
+
+## Running the app
+
+```bash
 npm run dev
 ```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+The app should now be running at http://localhost:5173 (default Vite port).
