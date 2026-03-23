@@ -35,9 +35,7 @@ npm install
 ## Configuration
 
 ```bash
-# Create a .env file in the project root with the following variables:
 VITE_PAYSHARE_API_URL=http://localhost:3000
-VITE_PAYSHARE_API_KEY=YOUR_PAYSHARE_API_KEY
 ```
 
 ## Running the app
