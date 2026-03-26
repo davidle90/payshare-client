@@ -9,7 +9,7 @@ The PayShare Frontend is a web application for managing shared expenses between 
 - **Expense Tracking:** Add, edit, and delete expenses within groups.  
 - **Simplified Balances:** See who owes whom and the minimized transactions between users.  
 - **Responsive UI:** Works on desktop and mobile devices.  
-- **Integration with Backend:** Communicates with the PayShare NestJS backend via REST API.
+- **Integration with Backend:** Communicates with the [PayShare NestJS](https://github.com/davidle90/payshare-nestjs) backend via REST API.
 
 ## Tech Stack
 
